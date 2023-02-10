@@ -2,7 +2,7 @@
 
 ## 如何生成 MVM jwt Token
 
-**Header**
+**HEADER**
 
 ```json
 {
@@ -11,7 +11,7 @@
 }
 ```
 
-**Payload**
+**PAYLOAD**
 
 ```json
 {
@@ -36,7 +36,7 @@
 
 ```ver```: 为版本号
 
-** SIGNATURE
+**SIGNATURE**
 
 ```javascript
 sig = this.signer.signMessage(
@@ -45,4 +45,4 @@ sig = this.signer.signMessage(
 )
 ```
 
-最后 ```base64UrlEncode(header) + "." + base64UrlEncode(payload) + "." + base64UrlEncode(sig)``` 即为 jwt token
+最后 ```base64UrlEncode(header) + "." + base64UrlEncode(payload) + "." + base64UrlEncode(sig)``` 即为最终 jwt token
