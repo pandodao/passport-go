@@ -9,6 +9,13 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
+const (
+	ChainID        = 73927
+	RPCEndpoint    = "https://geth.mvm.dev"
+	APIEndpoint    = "https://api.mvm.dev"
+	BridgeEndpoint = "https://bridge.mvm.dev"
+)
+
 var (
 	client = resty.New().SetBaseURL("https://api.mvm.dev")
 

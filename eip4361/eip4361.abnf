@@ -1,0 +1,57 @@
+sign-in-with-ethereum =
+    domain %s" wants you to sign in with your Ethereum account:" LF
+    address LF
+    LF
+    [ statement LF ]
+    LF
+    %s"URI: " uri LF
+    %s"Version: " version LF
+    %s"Chain ID: " chain-id LF
+    %s"Nonce: " nonce LF
+    %s"Issued At: " issued-at
+    [ LF %s"Expiration Time: " expiration-time ]
+    [ LF %s"Not Before: " not-before ]
+    [ LF %s"Request ID: " request-id ]
+    [ LF %s"Resources:"
+    resources ]
+
+domain = authority
+    ; From RFC 3986:
+    ;     authority     = [ userinfo "@" ] host [ ":" port ]
+    ; See RFC 3986 for the fully contextualized
+    ; definition of "authority".
+
+address = "0x" 40*40HEXDIG
+    ; Must also conform to captilization
+    ; checksum encoding specified in EIP-55
+    ; where applicable (EOAs).
+
+statement = *( reserved / unreserved / " " )
+    ; See RFC 3986 for the definition
+    ; of "reserved" and "unreserved".
+    ; The purpose is to exclude LF (line break).
+
+uri = URI
+    ; See RFC 3986 for the definition of "URI".
+
+version = "1"
+
+chain-id = 1*DIGIT
+    ; See EIP-155 for valid CHAIN_IDs.
+
+nonce = 8*( ALPHA / DIGIT )
+    ; See RFC 5234 for the definition
+    ; of "ALPHA" and "DIGIT".
+
+issued-at = date-time
+expiration-time = date-time
+not-before = date-time
+    ; See RFC 3339 (ISO 8601) for the
+    ; definition of "date-time".
+
+request-id = *pchar
+    ; See RFC 3986 for the definition of "pchar".
+
+resources = *( LF resource )
+
+resource = "- " URI
