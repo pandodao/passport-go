@@ -7,6 +7,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
+// GetUserContract get the contract address of the user
+// zero address means the user has no contract
 func GetUserContract(ctx context.Context, userID string) (common.Address, error) {
 	resp, err := client.R().SetContext(ctx).SetQueryParam("user", userID).Get(getUserContractURL)
 	if err != nil {
