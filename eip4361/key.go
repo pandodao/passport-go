@@ -29,6 +29,10 @@ func (key Key) err(err error) error {
 	}
 }
 
+func (key Key) errorf(format string, a ...any) error {
+	return key.err(fmt.Errorf(format, a...))
+}
+
 func (key Key) invalidFormat() error {
-	return key.err(fmt.Errorf("invalid format"))
+	return key.errorf("invalid format")
 }

@@ -237,7 +237,7 @@ func parseNonce(r *bytes.Reader) (string, error) {
 
 	f := abnf.C(
 		abnf.VS("Nonce: "),
-		abnf.K(abnf.RN(8, abnf.ALPHANUM()), int(key)),
+		abnf.K(abnf.RV(8, -1, abnf.ALPHANUM()), int(key)),
 		abnf.LF(),
 	)
 

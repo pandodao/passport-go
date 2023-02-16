@@ -11,36 +11,36 @@ import (
 
 type Message struct {
 	// Domain is the RFC 3986 authority that is requesting the signing.
-	Domain string
+	Domain string `json:"domain"`
 	// Address is the Ethereum address performing the signing conformant to capitalization encoded checksum specified in EIP-55 where applicable.
-	Address string
+	Address string `json:"address"`
 	// Statement (optional) is a human-readable ASCII assertion that the user will sign, and it must not contain '\n' (the byte 0x0a).
-	Statement string
+	Statement string `json:"statement"`
 	// URI is an RFC 3986 URI referring to the resource that is the subject of the signing (as in the subject of a claim).
-	URI string
+	URI string `json:"uri"`
 	// Version is the current version of the message, which MUST be 1 for this specification.
-	Version int
+	Version int `json:"version"`
 	// ChainID is the EIP-155 Chain ID to which the session is bound, and the network where Contract Accounts MUST be resolved.
-	ChainID int
+	ChainID int `json:"chain_id"`
 	// Nonce is a randomized token typically chosen by the relying party and used to prevent replay attacks, at least 8 alphanumeric characters.
-	Nonce string
+	Nonce string `json:"nonce"`
 	// IssuedAt is the ISO 8601 datetime string of the current time.
-	IssuedAt time.Time
+	IssuedAt time.Time `json:"issued_at"`
 	// ExpirationTime (optional) is the ISO 8601 datetime string that, if present, indicates when the signed authentication message is no longer valid.
-	ExpirationTime time.Time
+	ExpirationTime time.Time `json:"expiration_time"`
 	// NotBefore (optional) is the ISO 8601 datetime string that, if present, indicates when the signed authentication message will become valid.
-	NotBefore time.Time
+	NotBefore time.Time `json:"not_before"`
 	// RequestID (optional) is an system-specific identifier that may be used to uniquely refer to the sign-in request.
-	RequestID string
+	RequestID string `json:"request_id"`
 	// resources (optional) is a list of information or references to information the user wishes to have resolved as part of authentication by the relying party. They are expressed as RFC 3986 URIs separated by "\n- " where \n is the byte 0x0a.
-	Resources []string
+	Resources []string `json:"resources"`
 }
 
 func (m *Message) String() string {
-	return formatMessage(m)
+	return string(formatMessage(m))
 }
 
-func (m *Message) Validate() error {
+func (m *Message) Validate(at time.Time) error {
 	if err := validateDomain(m.Domain); err != nil {
 		return err
 	}
@@ -59,6 +59,14 @@ func (m *Message) Validate() error {
 
 	if m.IssuedAt.IsZero() {
 		return fmt.Errorf("issued at must be set")
+	}
+
+	if !m.ExpirationTime.IsZero() && m.ExpirationTime.Before(at) {
+		return fmt.Errorf("message expired")
+	}
+
+	if !m.NotBefore.IsZero() && m.NotBefore.After(at) {
+		return fmt.Errorf("message is not yet valid")
 	}
 
 	for _, resource := range m.Resources {

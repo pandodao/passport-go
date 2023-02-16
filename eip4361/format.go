@@ -1,13 +1,13 @@
 package eip4361
 
 import (
+	"bytes"
 	"fmt"
-	"strings"
 	"time"
 )
 
-func formatMessage(msg *Message) string {
-	var b strings.Builder
+func formatMessage(msg *Message) []byte {
+	var b bytes.Buffer
 
 	// domain
 	fmt.Fprintf(&b, "%s wants you to sign in with your Ethereum account:\n", msg.Domain)
@@ -38,16 +38,16 @@ func formatMessage(msg *Message) string {
 	fmt.Fprintf(&b, "Nonce: %s\n", msg.Nonce)
 
 	// issued at
-	fmt.Fprintf(&b, "Issued At: %s\n", msg.IssuedAt.Format(time.RFC3339))
+	fmt.Fprintf(&b, "Issued At: %s\n", msg.IssuedAt.Format(time.RFC3339Nano))
 
 	// expiration time
 	if !msg.ExpirationTime.IsZero() {
-		fmt.Fprintf(&b, "Expiration Time: %s\n", msg.ExpirationTime.Format(time.RFC3339))
+		fmt.Fprintf(&b, "Expiration Time: %s\n", msg.ExpirationTime.Format(time.RFC3339Nano))
 	}
 
 	// not before
 	if !msg.NotBefore.IsZero() {
-		fmt.Fprintf(&b, "Not Before: %s\n", msg.NotBefore.Format(time.RFC3339))
+		fmt.Fprintf(&b, "Not Before: %s\n", msg.NotBefore.Format(time.RFC3339Nano))
 	}
 
 	// request id
@@ -63,5 +63,5 @@ func formatMessage(msg *Message) string {
 		}
 	}
 
-	return b.String()
+	return bytes.TrimSpace(b.Bytes())
 }

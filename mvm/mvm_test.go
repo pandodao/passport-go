@@ -3,22 +3,26 @@ package mvm
 import (
 	"context"
 	"testing"
+
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
-func TestFetchAddress(t *testing.T) {
+func TestAPI(t *testing.T) {
 	ctx := context.Background()
-	userID := "e8e8cd79-cd40-4796-8c54-3a13cfe50115"
-	addr, err := UserToAddress(ctx, userID)
-	if err != nil {
-		t.Fatal(err)
-	}
 
-	id, err := AddressToUser(ctx, addr)
-	if err != nil {
-		t.Fatal(err)
-	}
+	addr := common.HexToAddress("0xE2aD78Fdf6C29338f5E2434380740ac889457256")
 
-	if id != userID {
-		t.Fatalf("expected %s, got %s", userID, id)
-	}
+	user, err := GetBridgeUser(ctx, addr)
+	require.NoError(t, err)
+
+	contract, err := GetUserContract(ctx, user.UserID)
+	require.NoError(t, err)
+
+	assert.Equal(t, user.Contract, contract)
+
+	userID, err := GetContractUser(ctx, user.Contract)
+	require.NoError(t, err)
+	assert.Equal(t, user.UserID, userID)
 }
