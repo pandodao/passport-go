@@ -3,7 +3,6 @@ package eip4361
 import (
 	"bytes"
 	"fmt"
-	"time"
 )
 
 func formatMessage(msg *Message) []byte {
@@ -29,7 +28,7 @@ func formatMessage(msg *Message) []byte {
 	fmt.Fprintf(&b, "URI: %s\n", msg.URI)
 
 	// version
-	fmt.Fprintf(&b, "Version: %d\n", msg.Version)
+	fmt.Fprintf(&b, "Version: %s\n", msg.Version)
 
 	// chain id
 	fmt.Fprintf(&b, "Chain ID: %d\n", msg.ChainID)
@@ -38,16 +37,16 @@ func formatMessage(msg *Message) []byte {
 	fmt.Fprintf(&b, "Nonce: %s\n", msg.Nonce)
 
 	// issued at
-	fmt.Fprintf(&b, "Issued At: %s\n", msg.IssuedAt.Format(time.RFC3339Nano))
+	fmt.Fprintf(&b, "Issued At: %s\n", msg.IssuedAt)
 
 	// expiration time
-	if !msg.ExpirationTime.IsZero() {
-		fmt.Fprintf(&b, "Expiration Time: %s\n", msg.ExpirationTime.Format(time.RFC3339Nano))
+	if msg.ExpirationTime != "" {
+		fmt.Fprintf(&b, "Expiration Time: %s\n", msg.ExpirationTime)
 	}
 
 	// not before
-	if !msg.NotBefore.IsZero() {
-		fmt.Fprintf(&b, "Not Before: %s\n", msg.NotBefore.Format(time.RFC3339Nano))
+	if msg.NotBefore != "" {
+		fmt.Fprintf(&b, "Not Before: %s\n", msg.NotBefore)
 	}
 
 	// request id

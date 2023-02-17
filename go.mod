@@ -39,6 +39,7 @@ require (
 	github.com/fox-one/mixin-sdk-go v1.7.2
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/relvacode/iso8601 v1.3.0
 	github.com/spf13/cast v1.5.0
 	github.com/storyicon/sigverify v1.1.0
 	github.com/stretchr/testify v1.8.1

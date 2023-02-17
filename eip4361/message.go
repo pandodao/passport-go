@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/relvacode/iso8601"
 	"github.com/spf13/cast"
 )
 
@@ -19,17 +20,17 @@ type Message struct {
 	// URI is an RFC 3986 URI referring to the resource that is the subject of the signing (as in the subject of a claim).
 	URI string `json:"uri"`
 	// Version is the current version of the message, which MUST be 1 for this specification.
-	Version int `json:"version"`
+	Version string `json:"version"`
 	// ChainID is the EIP-155 Chain ID to which the session is bound, and the network where Contract Accounts MUST be resolved.
 	ChainID int `json:"chain_id"`
 	// Nonce is a randomized token typically chosen by the relying party and used to prevent replay attacks, at least 8 alphanumeric characters.
 	Nonce string `json:"nonce"`
 	// IssuedAt is the ISO 8601 datetime string of the current time.
-	IssuedAt time.Time `json:"issued_at"`
+	IssuedAt string `json:"issued_at"`
 	// ExpirationTime (optional) is the ISO 8601 datetime string that, if present, indicates when the signed authentication message is no longer valid.
-	ExpirationTime time.Time `json:"expiration_time"`
+	ExpirationTime string `json:"expiration_time"`
 	// NotBefore (optional) is the ISO 8601 datetime string that, if present, indicates when the signed authentication message will become valid.
-	NotBefore time.Time `json:"not_before"`
+	NotBefore string `json:"not_before"`
 	// RequestID (optional) is an system-specific identifier that may be used to uniquely refer to the sign-in request.
 	RequestID string `json:"request_id"`
 	// resources (optional) is a list of information or references to information the user wishes to have resolved as part of authentication by the relying party. They are expressed as RFC 3986 URIs separated by "\n- " where \n is the byte 0x0a.
@@ -38,6 +39,18 @@ type Message struct {
 
 func (m *Message) String() string {
 	return string(formatMessage(m))
+}
+
+func (m *Message) IssuedAtTime() time.Time {
+	return timeFromString(m.IssuedAt)
+}
+
+func (m *Message) ExpiredAtTime() time.Time {
+	return timeFromString(m.ExpirationTime)
+}
+
+func (m *Message) NotBeforeTime() time.Time {
+	return timeFromString(m.NotBefore)
 }
 
 func (m *Message) Validate(at time.Time) error {
@@ -53,19 +66,19 @@ func (m *Message) Validate(at time.Time) error {
 		return err
 	}
 
-	if err := validateVersion(cast.ToString(m.Version)); err != nil {
+	if err := validateVersion(m.Version); err != nil {
 		return err
 	}
 
-	if m.IssuedAt.IsZero() {
+	if t := m.IssuedAtTime(); t.IsZero() {
 		return fmt.Errorf("issued at must be set")
 	}
 
-	if !m.ExpirationTime.IsZero() && m.ExpirationTime.Before(at) {
+	if t := m.ExpiredAtTime(); !t.IsZero() && t.Before(at) {
 		return fmt.Errorf("message expired")
 	}
 
-	if !m.NotBefore.IsZero() && m.NotBefore.After(at) {
+	if t := m.NotBeforeTime(); !t.IsZero() && t.After(at) {
 		return fmt.Errorf("message is not yet valid")
 	}
 
@@ -115,4 +128,9 @@ func validateVersion(version string) error {
 	}
 
 	return nil
+}
+
+func timeFromString(s string) time.Time {
+	t, _ := iso8601.ParseString(s)
+	return t
 }

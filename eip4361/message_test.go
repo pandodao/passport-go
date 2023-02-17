@@ -11,5 +11,6 @@ func TestValidate(t *testing.T) {
 		assert.NoError(t, validateDomain("example.com"))
 		assert.NoError(t, validateDomain("tom@example.com"))
 		assert.NoError(t, validateDomain("tom@example.com:80"))
+		assert.NoError(t, validateDomain("localhost:6006"))
 	})
 }

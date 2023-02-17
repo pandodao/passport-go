@@ -4,18 +4,19 @@ import (
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/accounts"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-func Verify(msg *Message, signature string) error {
+func Recover(data []byte, signature string) (common.Address, error) {
 	sig, err := hexutil.Decode(signature)
 	if err != nil {
-		return fmt.Errorf("decode signature: %w", err)
+		return common.Address{}, fmt.Errorf("decode signature: %w", err)
 	}
 
 	if len(sig) != crypto.SignatureLength {
-		return fmt.Errorf("signature must be %d bytes long", crypto.SignatureLength)
+		return common.Address{}, fmt.Errorf("signature must be %d bytes long", crypto.SignatureLength)
 	}
 
 	// comment(storyicon): fix ledger wallet
@@ -25,17 +26,26 @@ func Verify(msg *Message, signature string) error {
 	}
 
 	if sig[crypto.RecoveryIDOffset] != 27 && sig[crypto.RecoveryIDOffset] != 28 {
-		return fmt.Errorf("invalid Ethereum signature (V is not 27 or 28)")
+		return common.Address{}, fmt.Errorf("invalid Ethereum signature (V is not 27 or 28)")
 	}
 	sig[crypto.RecoveryIDOffset] -= 27 // Transform yellow paper V from 27/28 to 0/1
 
-	pk, err := crypto.SigToPub(accounts.TextHash(formatMessage(msg)), sig)
+	pk, err := crypto.SigToPub(accounts.TextHash(data), sig)
+	if err != nil {
+		return common.Address{}, err
+	}
+
+	return crypto.PubkeyToAddress(*pk), nil
+}
+
+func Verify(msg *Message, signature string) error {
+	addr, err := Recover(formatMessage(msg), signature)
 	if err != nil {
 		return err
 	}
 
-	if addr := crypto.PubkeyToAddress(*pk); addr.String() != msg.Address {
-		return fmt.Errorf("recoved address not match")
+	if addr.String() != msg.Address {
+		return fmt.Errorf("recoved address not match, expect %s, got %s", msg.Address, addr.String())
 	}
 
 	return nil
