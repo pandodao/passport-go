@@ -20,9 +20,9 @@ func TestAPI(t *testing.T) {
 	contract, err := GetUserContract(ctx, user.UserID)
 	require.NoError(t, err)
 
-	assert.Equal(t, user.Contract, contract)
+	assert.Equal(t, user.Contract, contract.String())
 
-	userID, err := GetContractUser(ctx, user.Contract)
+	userID, err := GetContractUser(ctx, contract)
 	require.NoError(t, err)
 	assert.Equal(t, user.UserID, userID)
 }

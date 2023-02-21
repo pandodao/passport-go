@@ -13,7 +13,7 @@ type BridgeUser struct {
 	FullName  string         `json:"full_name"`
 	CreatedAt time.Time      `json:"created_at"`
 	Key       mixin.Keystore `json:"key"`
-	Contract  common.Address `json:"contract"`
+	Contract  string         `json:"contract"`
 }
 
 func GetBridgeUser(ctx context.Context, addr common.Address) (*BridgeUser, error) {
