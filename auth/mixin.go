@@ -18,7 +18,7 @@ func (a *Authorizer) AuthorizeMixinToken(ctx context.Context, token string) (*Us
 	}
 
 	jwt.ParseWithClaims(token, &claims, nil)
-	if claims.Scope != "FULL" && !govalidator.IsIn(claims.Issuer, a.Issuers...) {
+	if claims.Scope != "FULL" && !govalidator.IsIn(claims.Issuer, a.issuers...) {
 		return nil, ErrInvalidIssuer
 	}
 

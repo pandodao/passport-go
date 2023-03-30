@@ -4,6 +4,7 @@ import "errors"
 
 var (
 	ErrInvalidIssuer        = errors.New("invalid issuer")
+	ErrInvalidDomain        = errors.New("invalid domain")
 	ErrBadLoginMethod       = errors.New("bad login method")
 	ErrBadMvmLoginSignature = errors.New("bad mvm login signature")
 	ErrBadMvmLoginMessage   = errors.New("bad mvm login message")

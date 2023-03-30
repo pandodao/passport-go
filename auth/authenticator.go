@@ -7,9 +7,15 @@ import (
 	"github.com/fox-one/mixin-sdk-go"
 )
 
+const (
+	AuthMethodMixinToken AuthMethod = "mixin_token"
+	AuthMethodMvm        AuthMethod = "mvm"
+)
+
 type (
 	Authorizer struct {
-		Issuers []string
+		issuers []string
+		domains []string
 	}
 
 	User struct {
@@ -17,25 +23,27 @@ type (
 		MvmAddress common.Address
 	}
 
+	AuthMethod          string
 	AuthorizationParams struct {
-		Method           string
-		MixinToken       string
-		MvmSignedMessage string
-		MvmSignature     string
+		Method           AuthMethod `json:"method"`
+		MixinToken       string     `json:"mixin_token"`
+		MvmSignedMessage string     `json:"mvm_signed_message"`
+		MvmSignature     string     `json:"mvm_signature"`
 	}
 )
 
-func New(issuers []string) *Authorizer {
+func New(issuers, domains []string) *Authorizer {
 	return &Authorizer{
-		Issuers: issuers,
+		issuers: issuers,
+		domains: domains,
 	}
 }
 
 func (a *Authorizer) Authorize(ctx context.Context, params *AuthorizationParams) (*User, error) {
 	switch params.Method {
-	case "mixin_token":
+	case AuthMethodMixinToken:
 		return a.AuthorizeMixinToken(ctx, params.MixinToken)
-	case "mvm":
+	case AuthMethodMvm:
 		return a.AuthorizeMvmMessage(ctx, params.MvmSignedMessage, params.MvmSignature)
 	default:
 		return nil, ErrBadLoginMethod

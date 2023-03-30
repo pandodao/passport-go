@@ -25,8 +25,8 @@ func (a *Authorizer) AuthorizeMvmMessage(ctx context.Context, signedMessage, sig
 		return nil, ErrBadMvmLoginSignature
 	}
 
-	if !govalidator.IsIn(message.Domain, a.Issuers...) {
-		return nil, ErrInvalidIssuer
+	if !govalidator.IsIn(message.Domain, a.domains...) {
+		return nil, ErrInvalidDomain
 	}
 
 	addr := common.HexToAddress(message.Address)
