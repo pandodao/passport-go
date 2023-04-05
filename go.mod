@@ -1,4 +1,4 @@
-module github.com/fox-one/passport-go
+module github.com/pandodao/passport-go
 
 go 1.19
 

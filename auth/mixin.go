@@ -7,8 +7,8 @@ import (
 	"github.com/asaskevich/govalidator"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/fox-one/mixin-sdk-go"
-	"github.com/fox-one/passport-go/mvm"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/pandodao/passport-go/mvm"
 )
 
 func (a *Authorizer) AuthorizeMixinToken(ctx context.Context, token string) (*User, error) {

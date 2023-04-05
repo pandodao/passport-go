@@ -7,8 +7,8 @@ import (
 	"github.com/asaskevich/govalidator"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/fox-one/mixin-sdk-go"
-	"github.com/fox-one/passport-go/eip4361"
-	"github.com/fox-one/passport-go/mvm"
+	"github.com/pandodao/passport-go/eip4361"
+	"github.com/pandodao/passport-go/mvm"
 )
 
 func (a *Authorizer) AuthorizeMvmMessage(ctx context.Context, signedMessage, signature string) (*User, error) {
