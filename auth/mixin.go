@@ -33,7 +33,7 @@ func (a *Authorizer) AuthorizeMixinToken(ctx context.Context, token string) (*Us
 	}
 
 	emptyAddr := common.Address{}
-	if bytes.Equal(contractAddr[:], emptyAddr[:]) {
+	if !bytes.Equal(contractAddr[:], emptyAddr[:]) {
 		return nil, ErrBadLoginMethod
 	}
 
