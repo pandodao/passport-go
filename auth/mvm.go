@@ -4,14 +4,17 @@ import (
 	"context"
 	"time"
 
-	"github.com/asaskevich/govalidator"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/fox-one/mixin-sdk-go"
 	"github.com/pandodao/passport-go/eip4361"
 	"github.com/pandodao/passport-go/mvm"
 )
 
-func (a *Authorizer) AuthorizeMvmMessage(ctx context.Context, signedMessage, signature string) (*User, error) {
+func (a *Authorizer) AuthorizeMvmMessage(
+	ctx context.Context,
+	signedMessage, signature string,
+	validator MvmValidator,
+) (*User, error) {
 	message, err := eip4361.Parse(signedMessage)
 	if err != nil {
 		return nil, ErrBadMvmLoginMessage
@@ -25,8 +28,12 @@ func (a *Authorizer) AuthorizeMvmMessage(ctx context.Context, signedMessage, sig
 		return nil, ErrBadMvmLoginSignature
 	}
 
-	if !govalidator.IsIn(message.Domain, a.domains...) {
-		return nil, ErrInvalidDomain
+	if validator != nil {
+		if ok, err := validator(ctx, message); err != nil {
+			return nil, err
+		} else if !ok {
+			return nil, ErrBadMvmLoginMessage
+		}
 	}
 
 	addr := common.HexToAddress(message.Address)
