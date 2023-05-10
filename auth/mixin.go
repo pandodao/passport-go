@@ -3,6 +3,7 @@ package auth
 import (
 	"bytes"
 	"context"
+	"fmt"
 
 	"github.com/asaskevich/govalidator"
 	"github.com/ethereum/go-ethereum/common"
@@ -19,22 +20,22 @@ func (a *Authorizer) AuthorizeMixinToken(ctx context.Context, token string) (*Us
 
 	jwt.ParseWithClaims(token, &claims, nil)
 	if claims.Scope != "FULL" && !govalidator.IsIn(claims.Issuer, a.issuers...) {
-		return nil, ErrInvalidIssuer
+		return nil, NewBadIssuerError("")
 	}
 
 	user, err := mixin.NewFromAccessToken(token).UserMe(ctx)
 	if err != nil {
-		return nil, err
+		return nil, NewError(fmt.Sprintf("read user profile failed (%v)", err.Error()))
 	}
 
 	contractAddr, err := mvm.GetUserContract(ctx, user.UserID)
 	if err != nil {
-		return nil, err
+		return nil, NewError(fmt.Sprintf("read bridge user failed (%v)", err.Error()))
 	}
 
 	emptyAddr := common.Address{}
 	if !bytes.Equal(contractAddr[:], emptyAddr[:]) {
-		return nil, ErrBadLoginMethod
+		return nil, NewBadLoginMethodError("mvm user")
 	}
 
 	return &User{User: *user}, nil

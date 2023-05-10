@@ -8,14 +8,14 @@ import (
 )
 
 type (
-	MvmValidator func(ctx context.Context, message *eip4361.Message) (bool, error)
+	MvmValidator func(ctx context.Context, message *eip4361.Message) error
 )
 
 func NewDomainsValidator(domains []string) MvmValidator {
-	return func(ctx context.Context, message *eip4361.Message) (bool, error) {
+	return func(ctx context.Context, message *eip4361.Message) error {
 		if !govalidator.IsIn(message.Domain, domains...) {
-			return false, ErrInvalidDomain
+			return NewBadDomainError("")
 		}
-		return true, nil
+		return nil
 	}
 }

@@ -62,6 +62,6 @@ func (a *Authorizer) AuthorizeWithMvmValidator(
 	case AuthMethodMvm:
 		return a.AuthorizeMvmMessage(ctx, params.MvmSignedMessage, params.MvmSignature, validator)
 	default:
-		return nil, ErrBadLoginMethod
+		return nil, NewBadLoginMethodError("unknown method " + string(params.Method))
 	}
 }
