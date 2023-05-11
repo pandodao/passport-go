@@ -77,8 +77,23 @@ func TestMvmAuth(t *testing.T) {
 		}
 
 		{
+			// nonce
+			nonce := "1234"
+			message, signature := makeMessage(t, privateKey, domain, uri, nonce, resources, issuedAt, expiredAt)
+
+			_, err := auth.AuthorizeMvmMessage(
+				ctx,
+				message,
+				signature,
+				nil,
+			)
+			assert.True(t, IsErrBadLoginMessage(err), fmt.Sprintf("expect %d, got %v", ErrCodeBadLoginMessage, err))
+		}
+
+		{
 			// expire at
-			message, signature := makeMessage(t, privateKey, domain, uri, nonce, resources, issuedAt, expiredAt.AddDate(0, 0, -1))
+			expiredAt := expiredAt.AddDate(0, 0, -1)
+			message, signature := makeMessage(t, privateKey, domain, uri, nonce, resources, issuedAt, expiredAt)
 
 			_, err := auth.AuthorizeMvmMessage(
 				ctx,
