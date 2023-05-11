@@ -18,7 +18,7 @@ func (a *Authorizer) AuthorizeMvmMessage(
 ) (*User, error) {
 	message, err := eip4361.Parse(signedMessage)
 	if err != nil {
-		return nil, NewBadLoginMessageError("")
+		return nil, NewBadLoginMessageError(fmt.Sprintf("parse failed (%v)", err))
 	}
 
 	if err := message.Validate(time.Now()); err != nil {
@@ -26,12 +26,15 @@ func (a *Authorizer) AuthorizeMvmMessage(
 	}
 
 	if err := eip4361.Verify(message, signature); err != nil {
-		return nil, NewBadLoginSignatureError(err.Error())
+		return nil, NewBadLoginSignatureError(fmt.Sprintf("verify signature failed (%v)", err))
 	}
 
 	if validator != nil {
 		if err := validator(ctx, message); err != nil {
-			return nil, NewBadLoginMessageError(fmt.Sprintf("custom validate failed (%v)", err))
+			if _, ok := err.(*Error); !ok {
+				err = NewBadLoginMessageError(fmt.Sprintf("custom validate failed (%v)", err))
+			}
+			return nil, err
 		}
 	}
 
