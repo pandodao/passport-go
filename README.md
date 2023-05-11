@@ -46,3 +46,7 @@ sig = this.signer.signMessage(
 ```
 
 最后 ```base64UrlEncode(header) + "." + base64UrlEncode(payload) + "." + base64UrlEncode(sig)``` 即为最终 jwt token
+
+## 如何使用 auth
+
+Here is a [Golang Example](example/main.go).
