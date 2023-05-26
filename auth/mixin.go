@@ -28,14 +28,16 @@ func (a *Authorizer) AuthorizeMixinToken(ctx context.Context, token string) (*Us
 		return nil, NewError(fmt.Sprintf("read user profile failed (%v)", err.Error()))
 	}
 
-	contractAddr, err := mvm.GetUserContract(ctx, user.UserID)
-	if err != nil {
-		return nil, NewError(fmt.Sprintf("read bridge user failed (%v)", err.Error()))
-	}
+	if user.IdentityNumber == "" || user.IdentityNumber == "0" {
+		contractAddr, err := mvm.GetUserContract(ctx, user.UserID)
+		if err != nil {
+			return nil, NewError(fmt.Sprintf("read bridge user failed (%v)", err.Error()))
+		}
 
-	emptyAddr := common.Address{}
-	if !bytes.Equal(contractAddr[:], emptyAddr[:]) {
-		return nil, NewBadLoginMethodError("mvm user")
+		emptyAddr := common.Address{}
+		if !bytes.Equal(contractAddr[:], emptyAddr[:]) {
+			return nil, NewBadLoginMethodError("mvm user")
+		}
 	}
 
 	return &User{User: *user}, nil
