@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
-	github.com/ethereum/go-ethereum v1.12.0
+	github.com/ethereum/go-ethereum v1.12.1
 	github.com/fkgi/abnf v1.0.0
 	github.com/fox-one/mixin-sdk-go/v2 v2.0.0
 	github.com/go-resty/resty/v2 v2.10.0
@@ -22,11 +22,12 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
 	github.com/fox-one/msgpack v1.0.0 // indirect
+	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/gorilla/websocket v1.5.1 // indirect
-	github.com/holiman/uint256 v1.2.2 // indirect
+	github.com/holiman/uint256 v1.2.3 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.6 // indirect
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
