@@ -7,7 +7,7 @@ import (
 
 	"github.com/asaskevich/govalidator"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/fox-one/mixin-sdk-go"
+	"github.com/fox-one/mixin-sdk-go/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/pandodao/passport-go/mvm"
 )
