@@ -14,5 +14,3 @@ func (e *Err) Error() string {
 func (e *Err) Unwrap() error {
 	return e.err
 }
-
-
