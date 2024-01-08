@@ -7,7 +7,7 @@ require (
 	github.com/ethereum/go-ethereum v1.12.1
 	github.com/fkgi/abnf v1.0.0
 	github.com/fox-one/mixin-sdk-go/v2 v2.0.0
-	github.com/go-resty/resty/v2 v2.10.0
+	github.com/go-resty/resty/v2 v2.11.0
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/relvacode/iso8601 v1.3.0
 	github.com/spf13/cast v1.5.0
