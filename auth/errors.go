@@ -11,6 +11,7 @@ const (
 	ErrCodeBadLoginMethod
 	ErrCodeBadLoginMessage
 	ErrCodeBadLoginSignature
+	ErrCodeBadMixinToken
 )
 
 type (
@@ -36,6 +37,17 @@ func IsError(err error, code int) bool {
 		return err.Code == code
 	}
 	return false
+}
+
+func NewBadMixinTokenError(hint string) error {
+	msg := "bad mixin token"
+	if hint != "" {
+		msg = fmt.Sprintf("%s: %s", msg, hint)
+	}
+	return &Error{
+		Code:    ErrCodeBadMixinToken,
+		Message: msg,
+	}
 }
 
 func NewBadIssuerError(hint string) error {
